@@ -1,42 +1,85 @@
-<div style="max-width: 600px; margin: 0 auto;">
+<div style="display: flex; flex-direction: column; gap: 2rem;">
+    <!-- Scan & Connect -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">WhatsApp Configuration</h3>
+            <h3 class="card-title">Link New Device</h3>
         </div>
+        <div class="card-body">
+            <form id="connect-device-form">
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
 
-        <form onsubmit="event.preventDefault(); alert('Saved!');">
-            <div class="form-group">
-                <label class="form-label">Business Number</label>
-                <input type="text" class="form-control" placeholder="+1 555 123 4567">
-            </div>
+                    <div class="form-group">
+                        <label class="form-label">Business User</label>
+                        <select name="user_id" id="user-select" class="form-control" required
+                            onchange="loadDevices(this.value)">
+                            <option value="">Select User</option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">WABA ID</label>
-                <input type="text" class="form-control" placeholder="100000000000000">
-            </div>
+                    <div class="form-group">
+                        <label class="form-label">Device Name</label>
+                        <input type="text" name="device_name" class="form-control" required
+                            placeholder="e.g. Chrome Windows">
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">Phone Number ID</label>
-                <input type="text" class="form-control" placeholder="100000000000000">
-            </div>
+                    <div class="form-group">
+                        <label class="form-label">Device Type</label>
+                        <select name="device_type" class="form-control">
+                            <option value="whatsapp_web">WhatsApp Web (QR Scan)</option>
+                            <option value="meta_api">Meta Cloud API (Token)</option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">Access Token</label>
-                <input type="password" class="form-control" placeholder="••••••••••••••••">
-            </div>
+                </div>
 
-            <div class="form-group">
-                <label class="form-label">Template Status</label>
-                <select class="form-control">
-                    <option>Sandbox</option>
-                    <option>Live</option>
-                </select>
-            </div>
+                <!-- Simulation of QR Code UI -->
+                <div id="qr-container"
+                    style="display: none; text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+                    <p style="margin-bottom: 1rem; font-weight: 500;">Open WhatsApp on your phone > Menu > Linked
+                        Devices > Link a Device</p>
+                    <div
+                        style="width: 200px; height: 200px; background: #eee; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #888;">[ Mock QR Code ]</span>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">Scanning simulation...
+                    </p>
+                </div>
 
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <button type="button" class="btn btn-secondary">Update</button>
-            </div>
-        </form>
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="button" id="scan-btn" class="btn btn-primary" onclick="simulateScan()">Link
+                        Device</button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary" style="display: none;">Confirm
+                        Connection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Connected Devices -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">Connected Devices</h3>
+            <button class="btn btn-secondary btn-sm" onclick="refreshDevices()">Refresh</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Device Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Last Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="devices-table-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-secondary);">Select a user to view
+                            devices.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

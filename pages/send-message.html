@@ -1,32 +1,84 @@
-<div style="max-width: 600px; margin: 0 auto;">
+<div style="display: flex; flex-direction: column; gap: 2rem;">
+    <!-- Send Message Form -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Send Message</h3>
+            <h3 class="card-title">Send WhatsApp Message</h3>
         </div>
+        <div class="card-body">
+            <form id="send-message-form">
 
-        <form onsubmit="event.preventDefault(); alert('Sent!');">
-            <div class="form-group">
-                <label class="form-label">To Number</label>
-                <input type="tel" class="form-control" placeholder="+1...">
-            </div>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
 
-            <div class="form-group">
-                <label class="form-label">Template Name</label>
-                <select class="form-control">
-                    <option>welcome_message</option>
-                    <option>otp_code</option>
-                </select>
-            </div>
+                    <!-- Sender Selection (In a real app, this is auto-selected by auth) -->
+                    <div class="form-group">
+                        <label class="form-label">Sender (Business User)</label>
+                        <select name="user_id" id="sender-select" class="form-control" required
+                            onchange="updateSenderInfo(this.value)">
+                            <option value="">Select Sender</option>
+                        </select>
+                        <p class="text-secondary" style="font-size: 0.8rem; margin-top: 0.25rem;" id="sender-info"></p>
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">Template Data (JSON)</label>
-                <textarea class="form-control" rows="3" placeholder='{"name": "John"}'></textarea>
-                <p class="text-sm text-muted mt-2">Enter dynamic values for the template variables.</p>
-            </div>
+                    <!-- Mode -->
+                    <div class="form-group">
+                        <label class="form-label">Mode</label>
+                        <select name="mode" id="mode-select" class="form-control" required>
+                            <option value="official">Official API (Cost: 1.0)</option>
+                            <option value="unofficial">Unofficial / Scan (Cost: 0.5)</option>
+                        </select>
+                    </div>
 
-            <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </div>
-        </form>
+                    <!-- Receiver -->
+                    <div class="form-group">
+                        <label class="form-label">Receiver Number</label>
+                        <input type="text" name="receiver_number" class="form-control" required
+                            placeholder="e.g. 919876543210">
+                    </div>
+                </div>
+
+                <!-- Message Content -->
+                <div class="form-group">
+                    <label class="form-label">Message Body</label>
+                    <textarea name="message_body" class="form-control" rows="4" required
+                        placeholder="Hello, this is a test message!"></textarea>
+                </div>
+
+                <!-- Hidden / Defaults -->
+                <input type="hidden" name="sender_number" value="1234567890"> <!-- Mock Sender ID -->
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Message History -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">Message History</h3>
+            <button class="btn btn-secondary btn-sm" onclick="loadMessageHistory()">Refresh</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Sender</th>
+                        <th>Receiver</th>
+                        <th>Mode</th>
+                        <th>Status</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody id="message-history-table-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-secondary);">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

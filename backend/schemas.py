@@ -105,3 +105,45 @@ class CreditTransactionRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+class MessageCreate(BaseModel):
+    user_id: str
+    mode: str = "official"
+    sender_number: str
+    receiver_number: str
+    message_type: str = "text"
+    template_name: Optional[str] = None
+    message_body: str
+
+class MessageRead(BaseModel):
+    message_id: str
+    user_id: str
+    mode: str
+    sender_number: str
+    receiver_number: str
+    message_type: str
+    template_name: Optional[str] = None
+    message_body: str
+    status: str
+    credits_used: float
+    sent_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class DeviceCreate(BaseModel):
+    user_id: str
+    device_name: str
+    device_type: str = "whatsapp_web"
+
+class DeviceRead(BaseModel):
+    device_id: str
+    user_id: str
+    device_name: str
+    device_type: str
+    session_status: str
+    ip_address: Optional[str] = None
+    last_active: datetime
+
+    class Config:
+        from_attributes = True

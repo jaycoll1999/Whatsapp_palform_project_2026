@@ -86,3 +86,31 @@ class CreditTransaction(Base):
     to_business_user_id = Column(String, nullable=False)
     credits_shared = Column(Float, nullable=False)
     shared_at = Column(DateTime, default=datetime.utcnow)
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    message_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, nullable=False)
+    channel = Column(String, default="whatsapp")
+    mode = Column(String) # official | unofficial
+    sender_number = Column(String)
+    receiver_number = Column(String)
+    message_type = Column(String, default="text") # text | template
+    template_name = Column(String, nullable=True)
+    message_body = Column(Text)
+    status = Column(String, default="sent")
+    credits_used = Column(Float, default=0.0)
+    sent_at = Column(DateTime, default=datetime.utcnow)
+
+class LinkedDevice(Base):
+    __tablename__ = "linked_devices"
+
+    device_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, nullable=False)
+    device_name = Column(String)
+    device_type = Column(String, default="whatsapp_web") # whatsapp_web | meta_api
+    session_status = Column(String, default="disconnected") # connected | disconnected | scanning
+    qr_last_generated = Column(DateTime, nullable=True)
+    ip_address = Column(String, nullable=True)
+    last_active = Column(DateTime, default=datetime.utcnow)
