@@ -324,6 +324,15 @@ def send_message(msg: schemas.MessageCreate, db: Session = Depends(get_db)):
         )
         db.add(db_msg)
         
+        # 6. Usage Log
+        db_log = models.UsageLog(
+            user_id=msg.user_id,
+            message_id=db_msg.message_id,
+            credits_deducted=cost,
+            balance_after=user.credits_remaining
+        )
+        db.add(db_log)
+
         db.commit()
         db.refresh(db_msg)
         return map_db_message_to_schema(db_msg)
@@ -446,3 +455,24 @@ def validate_session(token: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Session expired")
         
     return {"status": "valid", "device_id": session.device_id}
+
+# --- Usage Log Routes ---
+
+def map_db_log_to_schema(db_log: models.UsageLog):
+    return {
+        "usage_id": db_log.usage_id,
+        "user_id": db_log.user_id,
+        "message_id": db_log.message_id,
+        "credits_deducted": db_log.credits_deducted,
+        "balance_after": db_log.balance_after,
+        "timestamp": db_log.timestamp
+    }
+
+@app.get("/usage/logs", response_model=List[schemas.UsageLogRead])
+def read_usage_logs(user_id: str = None, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    query = db.query(models.UsageLog)
+    if user_id:
+        query = query.filter(models.UsageLog.user_id == user_id)
+    
+    logs = query.order_by(models.UsageLog.timestamp.desc()).offset(skip).limit(limit).all()
+    return [map_db_log_to_schema(l) for l in logs]

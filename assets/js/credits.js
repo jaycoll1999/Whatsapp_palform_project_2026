@@ -16,6 +16,7 @@ function initCreditsPage() {
     // Initial Load
     fetchDataAndInitialize();
     loadCreditHistory();
+    loadUsageLogs();
 
     const form = document.getElementById('credit-distribution-form');
     if (form) {
@@ -181,3 +182,59 @@ async function loadCreditHistory() {
         tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem; text-align: center; color: red;">Error loading data.</td></tr>';
     }
 }
+
+window.loadUsageLogs = async function () {
+    const tbody = document.getElementById('usage-logs-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = '<tr><td colspan="5" style="padding: 1rem; text-align: center;">Loading...</td></tr>';
+
+    // Simple date filter logic (client-side or server-side supported?)
+    // Our backend route currently only supports user_id, skip, limit.
+    // We will just fetch all logs for now. To support date filtering, we would need to update backend.
+
+    try {
+        const response = await fetch(`${API_BASE}/usage/logs`);
+        if (!response.ok) throw new Error('Failed to fetch logs');
+
+        let logs = await response.json();
+
+        // Client-side date filtering if needed
+        const dateFilter = document.getElementById('log-date-filter')?.value;
+        if (dateFilter) {
+            logs = logs.filter(l => l.timestamp.startsWith(dateFilter));
+        }
+
+        if (logs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="padding: 1rem; text-align: center;">No usage logs found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = logs.map(l => {
+            const user = allBusinessUsers.find(u => u.user_id === l.user_id);
+            return `
+            <tr>
+                <td style="padding: 1rem; font-size: 0.85rem;">
+                    ${new Date(l.timestamp).toLocaleString()}
+                </td>
+                <td style="padding: 1rem;">
+                    ${user ? user.profile.name : l.user_id.substring(0, 8) + '...'}
+                </td>
+                <td style="padding: 1rem;">
+                     Message Sent
+                </td>
+                <td style="padding: 1rem; color: var(--danger, red); font-weight: bold;">
+                    -${l.credits_deducted}
+                </td>
+                <td style="padding: 1rem; font-family: monospace;">
+                    ${l.balance_after.toFixed(2)}
+                </td>
+            </tr>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Error loading logs:', error);
+        tbody.innerHTML = '<tr><td colspan="5" style="padding: 1rem; text-align: center; color: red;">Error loading logs.</td></tr>';
+    }
+};

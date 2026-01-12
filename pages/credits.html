@@ -69,4 +69,34 @@
             </table>
         </div>
     </div>
+
+    <!-- Usage Logs -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">Credit Usage Logs (Message Costs)</h3>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <input type="date" id="log-date-filter" class="form-control"
+                    style="width: 150px; font-size: 0.8rem; padding: 0.3rem;" onchange="loadUsageLogs()">
+                <button class="btn btn-secondary btn-sm" onclick="loadUsageLogs()">Refresh</button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Cost</th>
+                        <th>Balance After</th>
+                    </tr>
+                </thead>
+                <tbody id="usage-logs-table-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-secondary);">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

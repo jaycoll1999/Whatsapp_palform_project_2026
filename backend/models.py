@@ -124,3 +124,13 @@ class DeviceSession(Base):
     is_valid = Column(String, default="true") # Using string "true"/"false" for SQLite simplicity
     created_at = Column(DateTime, default=datetime.utcnow)
     expires_at = Column(DateTime, default=lambda: datetime.utcnow() + __import__('datetime').timedelta(days=7))
+
+class UsageLog(Base):
+    __tablename__ = "usage_logs"
+
+    usage_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, nullable=False)
+    message_id = Column(String, nullable=True) # Optional link to message
+    credits_deducted = Column(Float, nullable=False)
+    balance_after = Column(Float, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)

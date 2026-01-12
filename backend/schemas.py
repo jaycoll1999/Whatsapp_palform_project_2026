@@ -161,3 +161,14 @@ class SessionRead(BaseModel):
     
     class Config:
         from_attributes = True
+
+class UsageLogRead(BaseModel):
+    usage_id: str
+    user_id: str
+    message_id: Optional[str] = None
+    credits_deducted: float
+    balance_after: float
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
