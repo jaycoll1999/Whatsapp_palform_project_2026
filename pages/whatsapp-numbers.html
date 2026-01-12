@@ -1,0 +1,42 @@
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">WhatsApp Configuration</h3>
+        </div>
+
+        <form onsubmit="event.preventDefault(); alert('Saved!');">
+            <div class="form-group">
+                <label class="form-label">Business Number</label>
+                <input type="text" class="form-control" placeholder="+1 555 123 4567">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">WABA ID</label>
+                <input type="text" class="form-control" placeholder="100000000000000">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone Number ID</label>
+                <input type="text" class="form-control" placeholder="100000000000000">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Access Token</label>
+                <input type="password" class="form-control" placeholder="••••••••••••••••">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Template Status</label>
+                <select class="form-control">
+                    <option>Sandbox</option>
+                    <option>Live</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>

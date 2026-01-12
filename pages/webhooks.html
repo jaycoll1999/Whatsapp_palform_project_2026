@@ -1,0 +1,36 @@
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Webhook Configuration</h3>
+        </div>
+
+        <form onsubmit="event.preventDefault(); alert('Saved!');">
+            <div class="form-group">
+                <label class="form-label">Webhook URL</label>
+                <input type="url" class="form-control" placeholder="https://your-server.com/webhook">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Verify Token</label>
+                <input type="text" class="form-control" placeholder="my_secure_token">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Webhook Version</label>
+                <select class="form-control">
+                    <option>v19.0</option>
+                    <option>v18.0</option>
+                </select>
+            </div>
+
+            <div
+                style="background: var(--bg-body); padding: 1rem; border-radius: 6px; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                ℹ️ Ensure your Verify Token matches exactly what you enter in the Meta Dashboard.
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+            </div>
+        </form>
+    </div>
+</div>

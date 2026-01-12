@@ -1,0 +1,43 @@
+<div class="sidebar-header" style="padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+    <div
+        style="width: 32px; height: 32px; background: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+        W</div>
+    <h3 style="font-size: 1rem; margin: 0; font-weight: 600;">WhatsApp Platform</h3>
+</div>
+
+<nav style="flex: 1; padding: 1rem;">
+    <ul style="display: flex; flex-direction: column; gap: 0.25rem;">
+        <li><a href="#" class="nav-item active" data-page="dashboard"
+                onclick="loadPage('dashboard', event)">Dashboard</a></li>
+        <li><a href="#" class="nav-item" data-page="resellers" onclick="loadPage('resellers', event)">Resellers</a></li>
+        <li><a href="#" class="nav-item" data-page="users" onclick="loadPage('users', event)">Users</a></li>
+        <li><a href="#" class="nav-item" data-page="whatsapp-numbers"
+                onclick="loadPage('whatsapp-numbers', event)">WhatsApp Numbers</a></li>
+        <li><a href="#" class="nav-item" data-page="templates" onclick="loadPage('templates', event)">Templates</a></li>
+        <li><a href="#" class="nav-item" data-page="webhooks" onclick="loadPage('webhooks', event)">Webhooks</a></li>
+        <li><a href="#" class="nav-item" data-page="send-message" onclick="loadPage('send-message', event)">Send
+                Message</a></li>
+        <li><a href="#" class="nav-item" data-page="settings" onclick="loadPage('settings', event)">Settings</a></li>
+    </ul>
+</nav>
+
+<style>
+    .nav-item {
+        display: block;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        transition: all 0.15s;
+    }
+
+    .nav-item:hover {
+        background-color: var(--bg-body);
+        color: var(--text-primary);
+    }
+
+    .nav-item.active {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+    }
+</style>

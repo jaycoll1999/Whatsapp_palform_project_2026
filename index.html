@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Platform - Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- Sidebar Container (Loaded via JS) -->
+        <aside id="sidebar-container">
+            <!-- Loading... -->
+        </aside>
+
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Header Container (Loaded via JS) -->
+            <header id="header-container">
+                <!-- Loading... -->
+            </header>
+
+            <!-- Main Content Area -->
+            <main id="main-content">
+                <!-- Dynamic Page Content will be injected here -->
+                <div style="display: flex; justify-content: center; padding-top: 4rem;">
+                    <div class="spinner"
+                        style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;">
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Container (Loaded/Injected if needed) -->
+    <div id="modal-wrapper"></div>
+
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- JS -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/forms.js"></script>
+    <script src="assets/js/validation.js"></script>
+    <script src="assets/js/resellers.js"></script>
+</body>
+
+</html>
