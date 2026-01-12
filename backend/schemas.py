@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 # from pydantic import EmailStr # Commented out to reduce dependency issues if email-validator is missing
 from uuid import UUID
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 class ProfileBase(BaseModel):
     name: str

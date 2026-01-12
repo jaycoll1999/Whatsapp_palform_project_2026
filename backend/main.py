@@ -1,7 +1,10 @@
+from datetime import datetime
+import time
+import secrets
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 import models, schemas, database
@@ -212,63 +215,9 @@ def read_business_user(user_id: str, db: Session = Depends(get_db)):
     return map_db_business_to_schema(user)
 
 # --- Credit Distribution Routes ---
-
-@app.post("/credits/distribute", response_model=schemas.CreditTransactionRead)
-def distribute_credits(transaction: schemas.CreditDistributionCreate, db: Session = Depends(get_db)):
-    # 1. Get Reseller
-    reseller = db.query(models.MasterUser).filter(models.MasterUser.user_id == transaction.from_reseller_id).first()
-    if not reseller:
-        raise HTTPException(status_code=404, detail="Reseller not found")
-    
-    # 2. Get Business User
-    business_user = db.query(models.BusinessUser).filter(models.BusinessUser.user_id == transaction.to_business_user_id).first()
-    if not business_user:
-        raise HTTPException(status_code=404, detail="Business User not found")
-
-    # 3. Validation: Verify ownership (optional but recommended)
-    if business_user.parent_reseller_id != reseller.user_id:
-         raise HTTPException(status_code=403, detail="Reseller does not own this Business User")
-
-    # 4. Check Balance
-    if reseller.available_credits < transaction.credits:
-        raise HTTPException(status_code=400, detail="Insufficient credits in Reseller wallet")
-
-    # 5. Perform Transaction (Atomic)
-    try:
-        # Reseller: Deduct available, Add used
-        reseller.available_credits -= transaction.credits
-        reseller.used_credits += transaction.credits
-
-        # Business User: Add allocated, Add remaining
-        business_user.credits_allocated += transaction.credits
-        business_user.credits_remaining += transaction.credits
-        
-        # Record Transaction
-        db_transaction = models.CreditTransaction(
-            from_reseller_id=transaction.from_reseller_id,
-            to_business_user_id=transaction.to_business_user_id,
-            credits_shared=transaction.credits
-        )
-        db.add(db_transaction)
-        
-        db.commit()
-        db.refresh(db_transaction)
-        return db_transaction
-
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/credits/history", response_model=List[schemas.CreditTransactionRead])
-def read_credit_history(reseller_id: str = None, business_user_id: str = None, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    query = db.query(models.CreditTransaction)
-    
-    if reseller_id:
-        query = query.filter(models.CreditTransaction.from_reseller_id == reseller_id)
-    if business_user_id:
-        query = query.filter(models.CreditTransaction.to_business_user_id == business_user_id)
-        
-    return query.order_by(models.CreditTransaction.shared_at.desc()).offset(skip).limit(limit).all()
+# REFACTORED: Moved to routers/credits.py
+from routers import credits
+app.include_router(credits.router)
 
 # --- Message Routes ---
 
@@ -366,7 +315,6 @@ def map_db_device_to_schema(db_dev: models.LinkedDevice):
 @app.post("/devices/connect", response_model=schemas.DeviceRead)
 def connect_device(device: schemas.DeviceCreate, db: Session = Depends(get_db)):
     # 1. Simulate Connection delay/check (mock)
-    import time
     # time.sleep(1) 
 
     # 2. Create Device Entry
