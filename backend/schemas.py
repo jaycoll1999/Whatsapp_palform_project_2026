@@ -190,3 +190,22 @@ class ResellerAnalytics(BaseModel):
 
     class Config:
         from_attributes = True
+
+class WhatsAppConfigCreate(BaseModel):
+    user_id: str
+    business_number: str
+    waba_id: str
+    phone_number_id: str
+    access_token: str
+    template_status: str = "sandbox"
+
+class WhatsAppConfigRead(BaseModel):
+    user_id: str
+    business_number: str
+    waba_id: str
+    phone_number_id: str
+    template_status: str
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True

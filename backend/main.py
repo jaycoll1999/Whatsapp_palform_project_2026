@@ -511,3 +511,66 @@ def get_reseller_analytics(reseller_id: str, db: Session = Depends(get_db)):
         "active_business_users": len(sub_users),
         "business_user_stats": user_stats
     }
+
+# --- WhatsApp Official Config Routes ---
+
+@app.post("/whatsapp/official/config", response_model=schemas.WhatsAppConfigRead)
+def update_whatsapp_config(config: schemas.WhatsAppConfigCreate, db: Session = Depends(get_db)):
+    # 1. Check if user exists
+    user = db.query(models.BusinessUser).filter(models.BusinessUser.user_id == config.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Business User not found")
+
+    # 2. Check if config exists, update or create
+    db_config = db.query(models.WhatsAppOfficialConfig).filter(models.WhatsAppOfficialConfig.user_id == config.user_id).first()
+    
+    if db_config:
+        # Update
+        db_config.business_number = config.business_number
+        db_config.waba_id = config.waba_id
+        db_config.phone_number_id = config.phone_number_id
+        db_config.access_token = config.access_token
+        db_config.template_status = config.template_status
+        db_config.updated_at = datetime.utcnow()
+    else:
+        # Create
+        db_config = models.WhatsAppOfficialConfig(
+            user_id=config.user_id,
+            business_number=config.business_number,
+            waba_id=config.waba_id,
+            phone_number_id=config.phone_number_id,
+            access_token=config.access_token,
+            template_status=config.template_status
+        )
+        db.add(db_config)
+    
+    db.commit()
+    db.refresh(db_config)
+    
+    # Also update the user's whatsapp_mode if necessary (optional logic)
+    # user.whatsapp_mode = "official" 
+    # db.commit()
+
+    return {
+        "user_id": db_config.user_id,
+        "business_number": db_config.business_number,
+        "waba_id": db_config.waba_id,
+        "phone_number_id": db_config.phone_number_id,
+        "template_status": db_config.template_status,
+        "updated_at": db_config.updated_at
+    }
+
+@app.get("/whatsapp/official/{user_id}", response_model=schemas.WhatsAppConfigRead)
+def get_whatsapp_config(user_id: str, db: Session = Depends(get_db)):
+    db_config = db.query(models.WhatsAppOfficialConfig).filter(models.WhatsAppOfficialConfig.user_id == user_id).first()
+    if not db_config:
+        raise HTTPException(status_code=404, detail="Configuration not found")
+    
+    return {
+        "user_id": db_config.user_id,
+        "business_number": db_config.business_number,
+        "waba_id": db_config.waba_id,
+        "phone_number_id": db_config.phone_number_id,
+        "template_status": db_config.template_status,
+        "updated_at": db_config.updated_at
+    }

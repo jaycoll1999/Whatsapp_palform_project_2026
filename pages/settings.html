@@ -1,69 +1,63 @@
-<div class="grid-2" style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem; align-items: start;">
+<div style="max-width: 800px; margin: 0 auto;">
 
-    <!-- Settings Nav -->
-    <div class="card" style="padding: 0.5rem; gap: 0;">
-        <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem;">
-            <h4 style="font-size: 1rem;">Settings</h4>
-        </div>
-        <a href="#" class="nav-link active"
-            style="padding: 0.75rem 1rem; display: block; border-radius: var(--radius-md); background: var(--bg-body); color: var(--text-main); font-weight: 500;">General</a>
-        <a href="#" class="nav-link"
-            style="padding: 0.75rem 1rem; display: block; border-radius: var(--radius-md); color: var(--text-secondary);">Team
-            Members</a>
-        <a href="#" class="nav-link"
-            style="padding: 0.75rem 1rem; display: block; border-radius: var(--radius-md); color: var(--text-secondary);">Billing</a>
-        <a href="#" class="nav-link"
-            style="padding: 0.75rem 1rem; display: block; border-radius: var(--radius-md); color: var(--text-secondary); color: var(--danger);">Danger
-            Zone</a>
-    </div>
-
-    <!-- Main Settings Form -->
-    <div class="card">
+    <div class="card" style="margin-bottom: 2rem;">
         <div class="card-header">
-            <h3 class="card-title">General Settings</h3>
+            <h3 class="card-title">Select Business User</h3>
         </div>
-
-        <form>
-            <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem;">
-                <img src="assets/images/avatar-placeholder.png"
-                    style="width: 80px; height: 80px; border-radius: 50%; background: #eee;">
-                <div>
-                    <button type="button" class="btn btn-secondary btn-sm">Change Avatar</button>
-                    <p class="text-muted text-xs" style="margin-top: 0.5rem;">JPG or PNG, max 1MB</p>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Project Name</label>
-                <input type="text" class="form-control" value="My New Project">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Support Email</label>
-                <input type="email" class="form-control" value="support@example.com">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Timezone</label>
-                <select class="form-control">
-                    <option>(GMT-08:00) Pacific Time</option>
-                    <option>(GMT-05:00) Eastern Time</option>
-                    <option>(GMT+00:00) UTC</option>
+        <div class="card-body">
+            <div class="form-group" style="margin-bottom: 0;">
+                <select id="config-user-select" class="form-control" onchange="loadUserConfig(this.value)">
+                    <option value="">Select User to Configure</option>
                 </select>
             </div>
-
-            <div style="display: flex; justify-content: flex-end;">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
+        </div>
     </div>
 
-</div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Official WhatsApp API Configuration</h3>
+        </div>
+        <div class="card-body">
+            <form id="whatsapp-config-form">
 
-<style>
-    @media (max-width: 768px) {
-        .grid-2 {
-            grid-template-columns: 1fr !important;
-        }
-    }
-</style>
+                <div class="form-group">
+                    <label class="form-label">Business Phone Number</label>
+                    <input type="text" name="business_number" class="form-control" placeholder="+1234567890">
+                    <p class="text-secondary" style="font-size: 0.8rem;">The number associated with your WhatsApp
+                        Business Account.</p>
+                </div>
+
+                <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">WABA ID</label>
+                        <input type="text" name="waba_id" class="form-control" placeholder="1000...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number ID</label>
+                        <input type="text" name="phone_number_id" class="form-control" placeholder="1000...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Permanent Access Token</label>
+                    <input type="password" name="access_token" class="form-control" placeholder="EAAB...">
+                    <p class="text-secondary" style="font-size: 0.8rem;">System User Token with
+                        'whatsapp_business_management' permission.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Environment / Status</label>
+                    <select name="template_status" class="form-control">
+                        <option value="sandbox">Sandbox / Development</option>
+                        <option value="live">Live / Production</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+                    <div id="last-updated" style="font-size: 0.85rem; color: var(--text-secondary);"></div>
+                    <button type="submit" class="btn btn-primary">Save Configuration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

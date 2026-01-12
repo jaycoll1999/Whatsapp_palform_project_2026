@@ -134,3 +134,15 @@ class UsageLog(Base):
     credits_deducted = Column(Float, nullable=False)
     balance_after = Column(Float, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
+
+class WhatsAppOfficialConfig(Base):
+    __tablename__ = "whatsapp_official_configs"
+
+    # Using user_id as PK since 1 config per user
+    user_id = Column(String, primary_key=True) 
+    business_number = Column(String)
+    waba_id = Column(String)
+    phone_number_id = Column(String)
+    access_token = Column(String)
+    template_status = Column(String, default="sandbox") # sandbox | live
+    updated_at = Column(DateTime, default=datetime.utcnow)
