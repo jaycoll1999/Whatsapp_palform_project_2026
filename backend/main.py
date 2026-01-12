@@ -476,3 +476,38 @@ def read_usage_logs(user_id: str = None, skip: int = 0, limit: int = 100, db: Se
     
     logs = query.order_by(models.UsageLog.timestamp.desc()).offset(skip).limit(limit).all()
     return [map_db_log_to_schema(l) for l in logs]
+
+# --- Analytics Routes ---
+
+@app.get("/analytics/reseller/{reseller_id}", response_model=schemas.ResellerAnalytics)
+def get_reseller_analytics(reseller_id: str, db: Session = Depends(get_db)):
+    # 1. Get Reseller
+    reseller = db.query(models.MasterUser).filter(models.MasterUser.user_id == reseller_id).first()
+    if not reseller:
+        raise HTTPException(status_code=404, detail="Reseller not found")
+
+    # 2. Get Business Users
+    sub_users = db.query(models.BusinessUser).filter(models.BusinessUser.parent_reseller_id == reseller_id).all()
+
+    # 3. Calculate Stats
+    total_distributed = sum(user.credits_allocated for user in sub_users)
+    
+    # Map sub-user stats
+    user_stats = []
+    for user in sub_users:
+        user_stats.append({
+            "user_id": user.user_id,
+            "name": user.name,
+            "credits_allocated": user.credits_allocated,
+            "credits_used": user.credits_used,
+            "credits_remaining": user.credits_remaining
+        })
+
+    return {
+        "reseller_id": reseller.user_id,
+        "total_credits_purchased": reseller.total_credits, # Total loaded into reseller wallet
+        "total_credits_distributed": total_distributed,
+        "remaining_credits": reseller.available_credits,
+        "active_business_users": len(sub_users),
+        "business_user_stats": user_stats
+    }

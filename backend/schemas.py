@@ -172,3 +172,21 @@ class UsageLogRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+class BusinessUserStats(BaseModel):
+    user_id: str
+    name: str
+    credits_allocated: float
+    credits_used: float
+    credits_remaining: float
+
+class ResellerAnalytics(BaseModel):
+    reseller_id: str
+    total_credits_purchased: float
+    total_credits_distributed: float
+    remaining_credits: float
+    active_business_users: int
+    business_user_stats: List[BusinessUserStats]
+
+    class Config:
+        from_attributes = True
