@@ -394,3 +394,55 @@ def disconnect_device(device_id: str, db: Session = Depends(get_db)):
     db.delete(device)
     db.commit()
     return {"message": "Device disconnected successfully"}
+
+# --- Session Routes ---
+
+import secrets
+
+def map_db_session_to_schema(db_sess: models.DeviceSession):
+    return {
+        "session_id": db_sess.session_id,
+        "device_id": db_sess.device_id,
+        "session_token": db_sess.session_token,
+        "is_valid": db_sess.is_valid,
+        "created_at": db_sess.created_at,
+        "expires_at": db_sess.expires_at
+    }
+
+@app.post("/sessions", response_model=schemas.SessionRead)
+def create_session(session_data: schemas.SessionCreate, db: Session = Depends(get_db)):
+    # 1. Verify Device Exists
+    device = db.query(models.LinkedDevice).filter(models.LinkedDevice.device_id == session_data.device_id).first()
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+
+    # 2. Check if already has active session? (Optional Logic)
+    # For now, we allow multiple sessions per device or just create new one
+    
+    # Generate Token
+    token = secrets.token_urlsafe(32)
+
+    db_session = models.DeviceSession(
+        device_id=session_data.device_id,
+        session_token=token,
+        is_valid="true"
+    )
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    
+    return map_db_session_to_schema(db_session)
+
+@app.get("/sessions/validate")
+def validate_session(token: str, db: Session = Depends(get_db)):
+    session = db.query(models.DeviceSession).filter(models.DeviceSession.session_token == token).first()
+    if not session:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    if session.is_valid != "true":
+         raise HTTPException(status_code=401, detail="Session invalid")
+    
+    if session.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=401, detail="Session expired")
+        
+    return {"status": "valid", "device_id": session.device_id}

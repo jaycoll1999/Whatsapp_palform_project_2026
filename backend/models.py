@@ -114,3 +114,13 @@ class LinkedDevice(Base):
     qr_last_generated = Column(DateTime, nullable=True)
     ip_address = Column(String, nullable=True)
     last_active = Column(DateTime, default=datetime.utcnow)
+
+class DeviceSession(Base):
+    __tablename__ = "device_sessions"
+
+    session_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    device_id = Column(String, nullable=False)
+    session_token = Column(String, unique=True, nullable=False)
+    is_valid = Column(String, default="true") # Using string "true"/"false" for SQLite simplicity
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, default=lambda: datetime.utcnow() + __import__('datetime').timedelta(days=7))

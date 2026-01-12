@@ -147,3 +147,17 @@ class DeviceRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SessionCreate(BaseModel):
+    device_id: str
+
+class SessionRead(BaseModel):
+    session_id: str
+    device_id: str
+    session_token: str
+    is_valid: str
+    created_at: datetime
+    expires_at: datetime
+    
+    class Config:
+        from_attributes = True

@@ -67,9 +67,15 @@ window.loadDevices = async function (userId) {
                         ${d.session_status}
                     </span>
                 </td>
+                <td style="padding: 1rem;">
+                    <div id="session-${d.device_id}">
+                        <span class="badge badge-gray" style="font-size: 0.75rem;">Checking...</span>
+                    </div>
+                </td>
                 <td style="padding: 1rem;">${new Date(d.last_active).toLocaleString()}</td>
                 <td style="padding: 1rem;">
                      <button class="btn btn-danger btn-sm" onclick="disconnectDevice('${d.device_id}')">Disconnect</button>
+                     <button class="btn btn-secondary btn-sm" onclick="createSession('${d.device_id}')" style="margin-left: 0.5rem;">New Session</button>
                 </td>
             </tr>
         `).join('');
@@ -177,5 +183,29 @@ window.disconnectDevice = async function (deviceId) {
     } catch (error) {
         console.error(error);
         alert('Error disconnecting');
+    }
+};
+
+window.createSession = async function (deviceId) {
+    try {
+        const response = await fetch(`${API_BASE}/sessions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_id: deviceId })
+        });
+
+        if (response.ok) {
+            const session = await response.json();
+            const badge = document.getElementById(`session-${deviceId}`);
+            if (badge) {
+                badge.innerHTML = `<span class="badge badge-success" title="Token: ${session.session_token.substring(0, 10)}...">Active</span>`;
+            }
+            alert('New Session Token Generated!');
+        } else {
+            alert('Failed to create session');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Error creating session');
     }
 };
