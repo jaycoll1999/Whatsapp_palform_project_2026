@@ -41,3 +41,48 @@ class MasterUser(Base):
     used_credits = Column(Float, default=0.0)
     
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class BusinessUser(Base):
+    __tablename__ = "business_users"
+
+    user_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    parent_reseller_id = Column(String, nullable=False) # Foreign Key logic handling manually for SQLite simplicity or can use ForeignKey
+    role = Column(String, default="business_owner")
+    status = Column(String, default="active")
+    
+    # Profile
+    name = Column(String, nullable=False)
+    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    phone = Column(String)
+    password_hash = Column(String, nullable=False)
+    
+    # Business
+    business_name = Column(String)
+    business_description = Column(Text)
+    erp_system = Column(String)
+    gstin = Column(String)
+    
+    # Address
+    full_address = Column(Text)
+    pincode = Column(String)
+    country = Column(String)
+
+    # Wallet
+    credits_allocated = Column(Float, default=0.0)
+    credits_used = Column(Float, default=0.0)
+    credits_remaining = Column(Float, default=0.0)
+
+    # WhatsApp Config
+    whatsapp_mode = Column(String, default="official") # official | unofficial
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class CreditTransaction(Base):
+    __tablename__ = "credit_transactions"
+
+    distribution_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    from_reseller_id = Column(String, nullable=False)
+    to_business_user_id = Column(String, nullable=False)
+    credits_shared = Column(Float, nullable=False)
+    shared_at = Column(DateTime, default=datetime.utcnow)

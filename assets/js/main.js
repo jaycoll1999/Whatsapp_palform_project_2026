@@ -62,7 +62,9 @@ async function loadPage(pageName, event = null) {
             'webhooks': 'Webhook Configuration',
             'send-message': 'Send Message',
             'settings': 'Settings',
-            'resellers': 'Reseller Management'
+            'resellers': 'Reseller Management',
+            'business-users': 'Business User Management',
+            'credits': 'Credit Distribution'
         };
         const pageTitle = document.getElementById('page-title');
         if (pageTitle) pageTitle.textContent = titleMap[pageName] || 'Dashboard';

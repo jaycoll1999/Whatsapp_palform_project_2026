@@ -1,0 +1,72 @@
+<div style="display: flex; flex-direction: column; gap: 2rem;">
+    <!-- Distribute Credits Form -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Distribute Credits</h3>
+        </div>
+        <div class="card-body">
+            <form id="credit-distribution-form">
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <!-- From Reseller -->
+                    <div class="form-group">
+                        <label class="form-label">From Reseller</label>
+                        <select name="from_reseller_id" id="reseller-select" class="form-control" required
+                            onchange="filterBusinessUsers(this.value)">
+                            <option value="">Select Reseller</option>
+                        </select>
+                        <p class="text-secondary" style="font-size: 0.8rem; margin-top: 0.25rem;" id="reseller-balance">
+                        </p>
+                    </div>
+
+                    <!-- To Business User -->
+                    <div class="form-group">
+                        <label class="form-label">To Business User</label>
+                        <select name="to_business_user_id" id="business-user-select" class="form-control" required
+                            disabled>
+                            <option value="">Select Reseller First</option>
+                        </select>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="form-group">
+                        <label class="form-label">Credits to Share</label>
+                        <input type="number" name="credits" class="form-control" required min="1" step="0.01"
+                            placeholder="0.00">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Transfer Credits</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- History -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">Credit History</h3>
+            <button class="btn btn-secondary btn-sm" onclick="loadCreditHistory()">Refresh</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reseller (From)</th>
+                        <th>Business User (To)</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="credit-history-table-body">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-secondary);">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

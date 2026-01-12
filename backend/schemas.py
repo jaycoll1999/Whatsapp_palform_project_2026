@@ -60,3 +60,48 @@ class ResellerRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+class BusinessWalletBase(BaseModel):
+    credits_allocated: float = 0.0
+    credits_used: float = 0.0
+    credits_remaining: float = 0.0
+
+class BusinessUserCreate(BaseModel):
+    role: str = "business_owner"
+    status: str = "active"
+    parent_reseller_id: str
+    whatsapp_mode: str = "official"
+    profile: ProfileCreate
+    business: BusinessBase
+    address: AddressBase
+    wallet: Optional[BusinessWalletBase] = None
+
+class BusinessUserRead(BaseModel):
+    user_id: str
+    parent_reseller_id: str
+    role: str
+    status: str
+    whatsapp_mode: str
+    profile: ProfileRead
+    business: BusinessBase
+    address: AddressBase
+    wallet: BusinessWalletBase
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class CreditDistributionCreate(BaseModel):
+    from_reseller_id: str
+    to_business_user_id: str
+    credits: float
+
+class CreditTransactionRead(BaseModel):
+    distribution_id: str
+    from_reseller_id: str
+    to_business_user_id: str
+    credits_shared: float
+    shared_at: datetime
+
+    class Config:
+        from_attributes = True
